@@ -21,8 +21,8 @@ module sdram #(parameter FREQ = 50000000) (
   output logic        sd_ras,       // row address select
   output logic        sd_cas,       // column address select
   output logic        sd_we,        // write enable
-  output logic [15:0] sd_data_out,  // write data
   input  logic [15:0] sd_data_in,   // read data
+  output logic [15:0] sd_data_out,  // write data
   output logic        sd_drive_data // tristate driver enable
 );
 
@@ -41,28 +41,18 @@ module sdram #(parameter FREQ = 50000000) (
   localparam tPOD_ns = 200_000;
 
   // Timings (cycles)
-  localparam int tCAS     = 2;  // valid at any valid frequency
-  localparam int tRC      = $ceil(tRC_ns / tCK_ns)-1;  // Row cycle time (same bank)
-  localparam int tRFC     = $ceil(tRFC_ns / tCK_ns)-1;  // Refresh cycle time
-  localparam int tRCD     = $ceil(tRCD_ns / tCK_ns)-1;  // RAS# to CAS# delay (same bank)
-  localparam int tRP      = $ceil(tRP_ns / tCK_ns)-1;  // Precharge to refresh/row activate command (same bank)
-  localparam int tRRD     = $ceil(tRRD_ns / tCK_ns)-1;  // Row activate to row activate delay (different banks) 
-  localparam int tMRD     = $ceil(tMRD_ns / tCK_ns)-1;  // Mode register set cycle time
-  localparam int tRAS     = $ceil(tRAS_min_ns / tCK_ns)-1;  // Row activate to precharge time (same bank) (min)
-  localparam int tRAS_max = $ceil(tRAS_max_ns / tCK_ns)-1;  // Row active time (max)
-  localparam int tWR      = $ceil(tWR_ns / tCK_ns)-1;  // Write recovery
-  localparam int tREFI    = $ceil(tREFI_ns / tCK_ns)-1;  // Refresh period
-  localparam int tPOD     = $ceil(tPOD_ns / tCK_ns)-1;  // Power on delay
-
-  // Commands
-  localparam CMD_NOP     = 3'b111;
-  localparam CMD_STOP    = 3'b110;
-  localparam CMD_ACTIVE  = 3'b011;
-  localparam CMD_READ    = 3'b101;
-  localparam CMD_WRITE   = 3'b100;
-  localparam CMD_PRECHG  = 3'b010;
-  localparam CMD_AUTOREF = 3'b001;
-  localparam CMD_MRS     = 3'b000;
+  localparam tCAS     = 2;  // valid at any valid frequency
+  localparam tRC      = int'($ceil(tRC_ns / tCK_ns))-1;  // Row cycle time (same bank)
+  localparam tRFC     = int'($ceil(tRFC_ns / tCK_ns))-1;  // Refresh cycle time
+  localparam tRCD     = int'($ceil(tRCD_ns / tCK_ns))-1;  // RAS# to CAS# delay (same bank)
+  localparam tRP      = int'($ceil(tRP_ns / tCK_ns))-1;  // Precharge to refresh/row activate command (same bank)
+  localparam tRRD     = int'($ceil(tRRD_ns / tCK_ns))-1;  // Row activate to row activate delay (different banks) 
+  localparam tMRD     = int'($ceil(tMRD_ns / tCK_ns))-1;  // Mode register set cycle time
+  localparam tRAS     = int'($ceil(tRAS_min_ns / tCK_ns))-1;  // Row activate to precharge time (same bank) (min)
+  localparam tRAS_max = int'($ceil(tRAS_max_ns / tCK_ns))-1;  // Row active time (max)
+  localparam tWR      = int'($ceil(tWR_ns / tCK_ns))-1;  // Write recovery
+  localparam tREFI    = int'($ceil(tREFI_ns / tCK_ns))-1;  // Refresh period
+  localparam tPOD     = int'($ceil(tPOD_ns / tCK_ns))-1;  // Power on delay
 
   // SDRAM mode settings
   localparam BURST_LENGTH   = 3'b000; // 000 = none, 001 = 2, 010 = 4, 011 = 8
@@ -72,6 +62,19 @@ module sdram #(parameter FREQ = 50000000) (
   localparam NO_WRITE_BURST = 1'b1;   // 1 = disabled
   localparam MODE = {3'b000, NO_WRITE_BURST, TEST_MODE, CAS_LATENCY, BURST_TYPE, BURST_LENGTH};
 
+  // Commands
+  enum logic [2:0] {
+    CMD_NOP     = 3'b111,
+    CMD_STOP    = 3'b110,
+    CMD_ACTIVE  = 3'b011,
+    CMD_READ    = 3'b101,
+    CMD_WRITE   = 3'b100,
+    CMD_PRECHG  = 3'b010,
+    CMD_AUTOREF = 3'b001,
+    CMD_MRS     = 3'b000
+  } sd_cmd;
+
+  // States
   typedef enum {
     INIT_POWER,
     INIT_PRECHARGE,
@@ -97,8 +100,7 @@ module sdram #(parameter FREQ = 50000000) (
   logic [12:0] row_addr;
   logic [9:0]  col_addr;
 
-  logic [2:0]  sd_cmd;
-  logic [15:0] delay, remaining_delay;
+  logic [15:0] delay, wait_cycles;
   // rows open in every bank
   logic [3:0]  open_rows;
   logic [12:0] open_row_addrs [3:0];
@@ -110,12 +112,33 @@ module sdram #(parameter FREQ = 50000000) (
 
 
   assign {chip_addr, bank_addr, row_addr, col_addr} = addr;
-
+  
   assign sd_clk = clk;
   assign {sd_ras, sd_cas, sd_we} = sd_cmd;
   assign data_read = sd_data_in;
   assign data_read_val = cas_shift_r[0];
 
+  // nextstate / delay (NOP)
+  always_ff @(posedge clk) begin
+    if (reset) begin
+      state <= IDLE;
+    end else begin
+      if (delay != 0) begin
+        wait_cycles <= delay - 1;
+        post_delay_state <= next_state;
+        state <= WAIT;
+      end else if (state == WAIT) begin
+        if (wait_cycles == 0)
+          state <= post_delay_state;
+        else
+          wait_cycles <= wait_cycles - 1;
+      end else begin
+        state <= next_state;
+      end
+    end
+  end
+
+  // sdram driver
   always_comb begin
     next_state = IDLE;
     delay = '0;
