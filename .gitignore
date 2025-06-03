@@ -1,1 +1,5 @@
 quartus/
+__pycache__
+sim_build/
+*.fst
+*.xml
