@@ -17,9 +17,17 @@ async def test1(dut):
     dut.reset.value = 0
     await RisingEdge(dut.clk)
 
-    dut.write.value = 1
-    dut.addr.value = 0x22beef
-    dut.data_write.value = 0x1337
-    await RisingEdge(dut.clk)
-
-    await Timer(time=7.8, units="us")
+    for _ in range(10000):
+        if random.randint(0,1):
+            dut.addr.value = random.getrandbits(25)
+            if random.randint(0,1):
+                dut.write.value = 1
+                dut.data_write.value = random.getrandbits(16)
+            else:
+                dut.read.value = 1
+        await FallingEdge(dut.clk)
+        while not dut.cmd_ready.value:
+            await FallingEdge(dut.clk)
+        
+        dut.write.value = 0
+        dut.read.value = 0
