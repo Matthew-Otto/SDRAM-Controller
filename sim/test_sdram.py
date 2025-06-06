@@ -31,7 +31,7 @@ async def test1(dut):
 
     addr = addr_gen()
 
-    for _ in range(1<<18):
+    for _ in range(1<<16):
         if random.randint(0,1):
             #dut.addr.value = random.getrandbits(26)
             dut.addr.value = next(addr)

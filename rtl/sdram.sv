@@ -1,5 +1,6 @@
 // Module to drive dual Alliance Memory AS4C32M16SB module connected to DE10-Nano via GPIO
 
+// 2048 byte rows
 
 // Interface
 // When cmd_ready is asserted, controller will accept a command on the next rising edge
@@ -60,7 +61,7 @@ module sdram #(parameter FREQ = 50000000) (
   localparam tPOD     = int'((tPOD_ns + tCK_ns - 1) / tCK_ns) - 1;  // Power on delay
 
   // SDRAM mode settings
-  localparam BURST_LENGTH   = 3'b000; // 000 = none, 001 = 2, 010 = 4, 011 = 8
+  localparam BURST_LENGTH   = 3'b011; // 000 = none, 001 = 2, 010 = 4, 011 = 8
   localparam BURST_TYPE     = 1'b0;   // 0 = sequential, 1 = interleaved
   localparam CAS_LATENCY    = 3'd2;   // 2/3 allowed
   localparam TEST_MODE      = 2'b00;  // 0 = disabled
@@ -93,6 +94,7 @@ module sdram #(parameter FREQ = 50000000) (
     ACTIVATE,  // Open Row
     PRECHARGE, // Close Row
     READ,
+    READ_BURST,
     WRITE,
     REFRESH_PRECHARGE0, // Precharge All
     REFRESH_PRECHARGE1, // Precharge All
@@ -115,6 +117,7 @@ module sdram #(parameter FREQ = 50000000) (
   logic [1:0]  bank_addr;
   logic [12:0] row_addr;
   logic [9:0]  col_addr;
+  logic [2:0]  burst_count, next_burst_count;
 
   logic [15:0] delay, wait_cycles;
   // rows open in every bank
@@ -174,6 +177,8 @@ module sdram #(parameter FREQ = 50000000) (
         state <= next_state;
       end
     end
+
+    burst_count <= next_burst_count;
   end
 
   // sdram driver
@@ -181,6 +186,7 @@ module sdram #(parameter FREQ = 50000000) (
     power_on_seq_complete = 0;
     cmd_complete = 0;
     next_state = IDLE;
+    next_burst_count = 0;
     delay = '0;
     sd_cmd = CMD_NOP;
     sd_cs = '0;
@@ -238,8 +244,18 @@ module sdram #(parameter FREQ = 50000000) (
         sd_cs = chip_addr;
         sd_bank = bank_addr;
         sd_addr = col_addr;
-        next_state = IDLE;
-        cmd_complete = 1;
+        next_state = READ_BURST;
+        next_burst_count = 3'd6;
+      end
+      
+      READ_BURST : begin
+        if (burst_count == 0) begin
+          cmd_complete = 1;
+          next_state = IDLE;
+        end else begin
+          next_burst_count = burst_count - 1;
+          next_state = READ_BURST;
+        end
       end
 
       WRITE : begin
@@ -335,7 +351,7 @@ module sdram #(parameter FREQ = 50000000) (
     if (reset) begin
       cas_shift_r <= 0;
     end else begin
-      cas_shift_r[tCAS-1] <= (state == READ);
+      cas_shift_r[tCAS-1] <= ((state == READ) || (state == READ_BURST));
       for (int i = 0; i < tCAS-1; i++)
         cas_shift_r[i] <= cas_shift_r[i+1];
     end
