@@ -6,6 +6,18 @@ from cocotb.clock import Clock
 
 random.seed(2)
 
+def addr_gen():
+    lfsr = 1
+
+    while True:
+        feedback = lfsr & 0x1
+        for t in [1, 5, 25]:
+            feedback ^= (lfsr >> t) & 0x1
+        lfsr = ((lfsr << 1) & 0x3FFFFFF) | feedback
+        if lfsr == 1:
+            break
+        yield lfsr
+
 @cocotb.test()
 async def test1(dut):
     # start system clock
@@ -17,9 +29,12 @@ async def test1(dut):
     dut.reset.value = 0
     await RisingEdge(dut.clk)
 
-    for _ in range(10000):
+    addr = addr_gen()
+
+    for _ in range(1<<18):
         if random.randint(0,1):
-            dut.addr.value = random.getrandbits(25)
+            #dut.addr.value = random.getrandbits(26)
+            dut.addr.value = next(addr)
             if random.randint(0,1):
                 dut.write.value = 1
                 dut.data_write.value = random.getrandbits(16)
