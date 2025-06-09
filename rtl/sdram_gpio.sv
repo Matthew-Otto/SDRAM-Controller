@@ -105,4 +105,4 @@ module sdram_gpio #(parameter FREQ = 50000000) (
     .sd_drive_data(DQ_Write)
   );
 
-endmodule
+endmodule  // sdram_gpio

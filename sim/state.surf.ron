@@ -21,6 +21,7 @@
         active_scope: Some(WaveScope((
             strs: [
                 "sdram",
+                "col_addr_r",
             ],
         ))),
         items_tree: (
@@ -92,19 +93,13 @@
                     selected: false,
                 ),
                 (
-                    item_ref: (32),
+                    item_ref: (65),
                     level: 1,
                     unfolded: true,
                     selected: false,
                 ),
                 (
-                    item_ref: (35),
-                    level: 1,
-                    unfolded: true,
-                    selected: false,
-                ),
-                (
-                    item_ref: (36),
+                    item_ref: (57),
                     level: 1,
                     unfolded: true,
                     selected: false,
@@ -134,31 +129,103 @@
                     selected: false,
                 ),
                 (
+                    item_ref: (62),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (63),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
                     item_ref: (37),
                     level: 1,
                     unfolded: true,
                     selected: false,
                 ),
                 (
+                    item_ref: (67),
+                    level: 0,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (69),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (70),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (72),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (71),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (73),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (74),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (75),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (76),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (77),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (78),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
                     item_ref: (3),
+                    level: 1,
+                    unfolded: true,
+                    selected: false,
+                ),
+                (
+                    item_ref: (66),
                     level: 0,
                     unfolded: true,
                     selected: false,
                 ),
                 (
-                    item_ref: (48),
-                    level: 0,
-                    unfolded: true,
-                    selected: false,
-                ),
-                (
-                    item_ref: (2),
-                    level: 0,
-                    unfolded: true,
-                    selected: false,
-                ),
-                (
-                    item_ref: (56),
+                    item_ref: (64),
                     level: 0,
                     unfolded: true,
                     selected: false,
@@ -298,68 +365,36 @@
             ],
         ),
         displayed_items: {
-            (12): Divider((
-                color: None,
-                background_color: None,
-                name: None,
-            )),
-            (41): Variable((
+            (6): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "sdram",
-                            "open_row_addrs",
                         ],
                     ),
-                    name: "[2]",
+                    name: "write",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "[2] [12:0]",
+                display_name: "write",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (25): Group((
-                name: "Wait",
-                color: None,
-                background_color: None,
-                content: [],
-                is_open: false,
-            )),
-            (9): Variable((
+            (63): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "sdram",
                         ],
                     ),
-                    name: "data_write",
+                    name: "wr_buff_val",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "data_write [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (42): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                            "open_row_addrs",
-                        ],
-                    ),
-                    name: "[3]",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "[3] [12:0]",
+                display_name: "wr_buff_val",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -371,90 +406,18 @@
                 background_color: None,
                 name: None,
             )),
-            (7): Variable((
+            (46): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "sdram",
                         ],
                     ),
-                    name: "reset",
+                    name: "row_addr",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "reset",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (36): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "write_r",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "write_r",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (47): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "col_addr",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "col_addr [9:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (24): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "wait_cycles",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "wait_cycles [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (44): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "chip_addr",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "chip_addr",
+                display_name: "row_addr [12:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -479,84 +442,35 @@
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (1): Variable((
+            (9): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "sdram",
                         ],
                     ),
-                    name: "clk",
+                    name: "data_write",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "clk",
+                display_name: "data_write [15:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (34): Group((
-                name: "Command Latch",
+            (3): Divider((
+                color: None,
+                background_color: None,
+                name: None,
+            )),
+            (25): Group((
+                name: "Wait",
                 color: None,
                 background_color: None,
                 content: [],
                 is_open: false,
-            )),
-            (14): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "sd_cs",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "sd_cs",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (28): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "refresh_timer",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "refresh_timer [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (6): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "write",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "write",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
             )),
             (45): Variable((
                 variable_ref: (
@@ -576,296 +490,75 @@
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (37): Variable((
+            (69): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "sdram",
-                        ],
-                    ),
-                    name: "data_write_r",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "data_write_r [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (2): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "state",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "state [31:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Enum"),
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (39): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                            "open_row_addrs",
+                            "data_write_r",
                         ],
                     ),
                     name: "[0]",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "[0] [12:0]",
+                display_name: "…data_write_r.[0] [15:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (18): Variable((
+            (70): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "sdram",
-                        ],
-                    ),
-                    name: "sd_data_in",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "sd_data_in [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (48): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "next_state",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "next_state [31:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Enum"),
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (31): Group((
-                name: "Refresh",
-                color: None,
-                background_color: None,
-                content: [],
-                is_open: false,
-            )),
-            (46): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "row_addr",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "row_addr [12:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (15): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "sd_bank",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "sd_bank [1:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (3): Divider((
-                color: None,
-                background_color: None,
-                name: None,
-            )),
-            (40): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                            "open_row_addrs",
+                            "data_write_r",
                         ],
                     ),
                     name: "[1]",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "[1] [12:0]",
+                display_name: "…data_write_r.[1] [15:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (13): Variable((
+            (71): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "sdram",
                         ],
                     ),
-                    name: "sd_cmd",
+                    name: "chip_addr_r",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "sd_cmd [2:0]",
+                display_name: "chip_addr_r [1]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (23): Variable((
+            (75): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "sdram",
+                            "row_addr_r",
                         ],
                     ),
-                    name: "delay",
+                    name: "[0]",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "delay [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (10): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "data_read",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "data_read [15:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (8): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "addr",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "addr [25:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (33): Group((
-                name: "Command Input",
-                color: None,
-                background_color: None,
-                content: [],
-                is_open: false,
-            )),
-            (16): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "sd_addr",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "sd_addr [12:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (32): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "cmd_ready",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "cmd_ready",
-                display_name_type: Unique,
-                manual_name: None,
-                format: None,
-                field_formats: [],
-                height_scaling_factor: None,
-            )),
-            (21): Divider((
-                color: None,
-                background_color: None,
-                name: None,
-            )),
-            (17): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "sd_data_out",
-                ),
-                color: None,
-                background_color: None,
-                display_name: "sd_data_out [15:0]",
+                display_name: "…row_addr_r.[0] [12:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -890,66 +583,224 @@
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (38): Variable((
-                variable_ref: (
-                    path: (
-                        strs: [
-                            "sdram",
-                        ],
-                    ),
-                    name: "open_rows",
-                ),
+            (12): Divider((
                 color: None,
                 background_color: None,
-                display_name: "open_rows [7:0]",
-                display_name_type: Unique,
-                manual_name: None,
-                format: Some("Binary"),
-                field_formats: [],
-                height_scaling_factor: None,
+                name: None,
             )),
-            (35): Variable((
+            (74): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "sdram",
+                            "bank_addr_r",
                         ],
                     ),
-                    name: "read_r",
+                    name: "[1]",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "read_r",
+                display_name: "…bank_addr_r.[1] [1:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (11): Variable((
+            (76): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "sdram",
+                            "row_addr_r",
                         ],
                     ),
-                    name: "data_read_val",
+                    name: "[1]",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "data_read_val",
+                display_name: "…row_addr_r.[1] [12:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (43): Group((
-                name: "Open Rows",
+            (28): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "refresh_timer",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "refresh_timer [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (7): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "reset",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "reset",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (17): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "sd_data_out",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "sd_data_out [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (34): Group((
+                name: "Command Latch",
                 color: None,
                 background_color: None,
                 content: [],
                 is_open: false,
+            )),
+            (47): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "col_addr",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "col_addr [9:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (10): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "data_read",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "data_read [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (14): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "sd_cs",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "sd_cs",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (33): Group((
+                name: "Command Input",
+                color: None,
+                background_color: None,
+                content: [],
+                is_open: false,
+            )),
+            (8): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "addr",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "addr [25:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (16): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "sd_addr",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "sd_addr [12:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (72): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "chip_addr_r",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "chip_addr_r [0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
             )),
             (19): Variable((
                 variable_ref: (
@@ -969,18 +820,37 @@
                 field_formats: [],
                 height_scaling_factor: None,
             )),
-            (56): Variable((
+            (78): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                            "col_addr_r",
+                        ],
+                    ),
+                    name: "[1]",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…col_addr_r.[1] [9:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (23): Variable((
                 variable_ref: (
                     path: (
                         strs: [
                             "sdram",
                         ],
                     ),
-                    name: "burst_count",
+                    name: "delay",
                 ),
                 color: None,
                 background_color: None,
-                display_name: "burst_count [2:0]",
+                display_name: "delay [15:0]",
                 display_name_type: Unique,
                 manual_name: None,
                 format: None,
@@ -1005,12 +875,368 @@
                 field_formats: [],
                 height_scaling_factor: None,
             )),
+            (77): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                            "col_addr_r",
+                        ],
+                    ),
+                    name: "[0]",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…col_addr_r.[0] [9:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (73): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                            "bank_addr_r",
+                        ],
+                    ),
+                    name: "[0]",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…bank_addr_r.[0] [1:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (13): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "sd_cmd",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "sd_cmd [2:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (41): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                            "open_row_addrs",
+                        ],
+                    ),
+                    name: "[2]",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "[2] [12:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (44): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "chip_addr",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "chip_addr",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (21): Divider((
+                color: None,
+                background_color: None,
+                name: None,
+            )),
+            (40): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                            "open_row_addrs",
+                        ],
+                    ),
+                    name: "[1]",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…open_row_addrs.[1] [12:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (15): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "sd_bank",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "sd_bank [1:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (11): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "data_read_val",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "data_read_val",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (39): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                            "open_row_addrs",
+                        ],
+                    ),
+                    name: "[0]",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "…open_row_addrs.[0] [12:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (1): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "clk",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "clk",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (18): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "sd_data_in",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "sd_data_in [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (31): Group((
+                name: "Refresh",
+                color: None,
+                background_color: None,
+                content: [],
+                is_open: false,
+            )),
+            (65): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "cmd_ready",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "cmd_ready",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (62): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "r_buff_val",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "r_buff_val",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (64): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "state",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "state [31:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Enum"),
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (66): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "burst_count",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "burst_count [2:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (38): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "open_rows",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "open_rows [7:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: Some("Binary"),
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (67): Group((
+                name: "Buffer Contents",
+                color: None,
+                background_color: None,
+                content: [],
+                is_open: false,
+            )),
+            (42): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                            "open_row_addrs",
+                        ],
+                    ),
+                    name: "[3]",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "[3] [12:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
+            (43): Group((
+                name: "Open Rows",
+                color: None,
+                background_color: None,
+                content: [],
+                is_open: false,
+            )),
+            (24): Variable((
+                variable_ref: (
+                    path: (
+                        strs: [
+                            "sdram",
+                        ],
+                    ),
+                    name: "wait_cycles",
+                ),
+                color: None,
+                background_color: None,
+                display_name: "wait_cycles [15:0]",
+                display_name_type: Unique,
+                manual_name: None,
+                format: None,
+                field_formats: [],
+                height_scaling_factor: None,
+            )),
         },
-        display_item_ref_counter: 56,
+        display_item_ref_counter: 78,
         viewports: [
             (
-                curr_left: (0.1537511740537253),
-                curr_right: (0.1920044006528895),
+                curr_left: (0.006981497042798115),
+                curr_right: (0.006994329592284033),
                 target_left: (0.0),
                 target_right: (1.0),
                 move_start_left: (0.0),
@@ -1020,10 +1246,10 @@
             ),
         ],
         cursor: Some((1, [
-            1271820000,
+            200760103,
         ])),
         markers: {},
-        focused_item: Some((22)),
+        focused_item: Some((30)),
         focused_transaction: (None, None),
         default_variable_name_type: Unique,
         scroll_offset: 0.0,
@@ -1033,8 +1259,8 @@
     drag_started: false,
     drag_source_idx: None,
     drag_target_idx: Some((
-        before: (20),
-        level: 0,
+        before: (23),
+        level: 1,
     )),
     previous_waves: None,
     count: None,

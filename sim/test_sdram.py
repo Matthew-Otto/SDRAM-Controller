@@ -32,7 +32,7 @@ async def test1(dut):
     addr = addr_gen()
 
     for _ in range(1<<16):
-        if random.randint(0,1):
+        if 1:#random.randint(0,1):
             #dut.addr.value = random.getrandbits(26)
             dut.addr.value = next(addr)
             if random.randint(0,1):
@@ -40,9 +40,9 @@ async def test1(dut):
                 dut.data_write.value = random.getrandbits(16)
             else:
                 dut.read.value = 1
-        await FallingEdge(dut.clk)
+        await RisingEdge(dut.clk)
         while not dut.cmd_ready.value:
-            await FallingEdge(dut.clk)
+            await RisingEdge(dut.clk)
         
         dut.write.value = 0
         dut.read.value = 0
