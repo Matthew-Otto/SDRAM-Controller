@@ -8,11 +8,14 @@ This controller currently targets 50MHz.
 
 ## Features
 This controller currently supports:
-* single word (no burst) reads and writes
-* single chip only (64MB)
+* Continuous (1 per cycle) single word writes
+* 8 word burst (BL8) reads
+* Full 128 MB support
 
 ## Viewing example waveforms
 Example IO can be viewed by simulating the supplied testbench.
 The testbench is written using [cocotb](https://github.com/cocotb/cocotb) for [Verilator](https://github.com/verilator/verilator). If you have these applications installed you can run the simulation by executing `make` in the `sim/` directory. 
 \
 Waveforms are written to `sim/dump.fst`. If you have [Surfer](https://gitlab.com/surfer-project/surfer) installed, you can view the waves by running `make waves` in the `sim/` directory.
+
+Note: the SDRAM module is not simulated. The waveforms will only contain the output from the memory controller.
