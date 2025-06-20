@@ -143,24 +143,26 @@ module sdram #(parameter FREQ = 50000000) (
   // input command latch
   always_ff @(posedge clk) begin
     if (reset) begin
-      power_on_seq_complete <= 0;
       read_b <= 0;
       write_b <= 0;
-    end else begin
-      if (state == INIT_AUTOREF2)
-        power_on_seq_complete <= 1;
-
-      if (cmd_ready) begin
-        if (read || write) begin
-          read_b <= read;
-          write_b <= write;
-          addr_b <= addr;
-          data_write_b <= data_write;
-        end else begin
-          read_b <= 0;
-          write_b <= 0;
-        end
+    end else if (cmd_ready) begin
+      if (read || write) begin
+        read_b <= read;
+        write_b <= write;
+      end else begin
+        read_b <= 0;
+        write_b <= 0;
       end
+    end
+
+    if (reset)
+      power_on_seq_complete <= 0;
+    else if (state == INIT_AUTOREF2)
+      power_on_seq_complete <= 1;
+
+    if (cmd_ready && (read || write)) begin
+      addr_b <= addr;
+      data_write_b <= data_write;
     end
   end
 
@@ -431,7 +433,6 @@ always_comb begin
       case (state)
         ACTIVATE : begin
           open_rows[{chip_addr,bank_addr}] <= 1'b1;
-          open_row_addrs[{chip_addr,bank_addr}] <= row_addr;
         end
         PRECHARGE : begin
           open_rows[{chip_addr,bank_addr}] <= '0;
@@ -444,6 +445,9 @@ always_comb begin
         end
       endcase
     end
+
+    if (state == ACTIVATE)
+      open_row_addrs[{chip_addr,bank_addr}] <= row_addr;
   end
 
 endmodule // sdram

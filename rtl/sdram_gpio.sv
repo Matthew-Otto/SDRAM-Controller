@@ -1,8 +1,8 @@
 // wrapper module for SDRAM controller that maps IO to GPIO pins
 
 module sdram_gpio #(parameter FREQ = 50000000) (
-  input  logic clk,
-  input  logic reset,
+  input  logic        clk,
+  input  logic        reset,
 
   // SOC interface
   input  logic        read,
