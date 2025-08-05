@@ -22,16 +22,16 @@ module sdram #(parameter FREQ = 50000000) (
 
 
   // SDRAM interface
-  output logic        sd_clk,
-  output logic        sd_cs,        // two chips
-  output logic [1:0]  sd_bank,      // four banks per chip
-  output logic [12:0] sd_addr,      // multiplexed address
-  output logic        sd_ras,       // row address select
-  output logic        sd_cas,       // column address select
-  output logic        sd_we,        // write enable
-  input  logic [15:0] sd_data_in,   // read data
-  output logic [15:0] sd_data_out,  // write data
-  output logic        sd_drive_data // tristate driver enable
+  output logic        sdram_clk,
+  output logic        sdram_cs,        // two chips
+  output logic [1:0]  sdram_bank,      // four banks per chip
+  output logic [12:0] sdram_addr,      // multiplexed address
+  output logic        sdram_ras,       // row address select
+  output logic        sdram_cas,       // column address select
+  output logic        sdram_we,        // write enable
+  input  logic [15:0] sdram_data_in,   // read data
+  output logic [15:0] sdram_data_out,  // write data
+  output logic        sdram_drive_data // tristate driver enable
 );
 
   // Timings (ns) (pg 22)
@@ -54,11 +54,11 @@ module sdram #(parameter FREQ = 50000000) (
   localparam tRCD     = 16'(int'((tRCD_ns + tCK_ns - 1) / tCK_ns) - 1);  // RAS# to CAS# delay (same bank)
   localparam tRP      = 16'(int'((tRP_ns + tCK_ns - 1) / tCK_ns) - 1);  // Precharge to refresh/row activate command (same bank)
   localparam tRRD     = 16'(int'((tRRD_ns + tCK_ns - 1) / tCK_ns) - 1);  // Row activate to row activate delay (different banks) 
-  localparam tMRD     = 16'(int'((tMRD_ns + tCK_ns - 1) / tCK_ns) - 1);  // Mode register set cycle time
   localparam tRAS     = 16'(int'((tRAS_min_ns + tCK_ns - 1) / tCK_ns) - 1);  // Row activate to precharge time (same bank) (min)
   localparam tWR      = 16'(int'((tWR_ns + tCK_ns - 1) / tCK_ns) - 1);  // Write recovery
   localparam tREFI    = 16'(int'((tREFI_ns + tCK_ns - 1) / tCK_ns) - 1);  // Refresh period
   localparam tPOD     = 16'(int'((tPOD_ns + tCK_ns - 1) / tCK_ns) - 1);  // Power on delay
+  localparam tMRD     = 16'(int'((tMRD_ns + tCK_ns - 1) / tCK_ns) - 1);  // Mode register set cycle time
 
   // SDRAM mode settings
   localparam BURST_LENGTH   = 3'b011; // 000 = none, 001 = 2, 010 = 4, 011 = 8
@@ -78,7 +78,7 @@ module sdram #(parameter FREQ = 50000000) (
     CMD_PRECHG  = 3'b010,
     CMD_AUTOREF = 3'b001,
     CMD_MRS     = 3'b000
-  } sd_cmd;
+  } sdram_cmd;
 
   // States
   typedef enum {
@@ -135,9 +135,9 @@ module sdram #(parameter FREQ = 50000000) (
   assign {chip_addr, bank_addr, row_addr, col_addr} = addr_b;
   assign {input_chip_addr, input_bank_addr, input_row_addr, input_col_addr} = addr;
 
-  assign sd_clk = clk;
-  assign {sd_ras, sd_cas, sd_we} = sd_cmd;
-  assign data_read = sd_data_in;
+  assign sdram_clk = clk;
+  assign {sdram_ras, sdram_cas, sdram_we} = sdram_cmd;
+  assign data_read = sdram_data_in;
   assign data_read_val = cas_shift_r[0];
   
   // input command latch
@@ -188,17 +188,17 @@ module sdram #(parameter FREQ = 50000000) (
     burst_count <= next_burst_count;
   end
 
-always_comb begin
+  always_comb begin
     cmd_complete = 0;
     next_state = IDLE;
     next_burst_count = 0;
     delay = '0;
-    sd_cmd = CMD_NOP;
-    sd_cs = '0;
-    sd_bank = '0;
-    sd_addr = '0;
-    sd_drive_data = '0;
-    sd_data_out = '0;
+    sdram_cmd = CMD_NOP;
+    sdram_cs = '0;
+    sdram_bank = '0;
+    sdram_addr = '0;
+    sdram_drive_data = '0;
+    sdram_data_out = '0;
 
     case (state)
       IDLE : begin
@@ -226,9 +226,9 @@ always_comb begin
 
       // Close row
       PRECHARGE : begin
-        sd_cmd = CMD_PRECHG;
-        sd_cs = chip_addr;
-        sd_bank = bank_addr;
+        sdram_cmd = CMD_PRECHG;
+        sdram_cs = chip_addr;
+        sdram_bank = bank_addr;
         delay = tRP;
         next_state = ACTIVATE;
       end
@@ -236,10 +236,10 @@ always_comb begin
       // Open row
       ACTIVATE : begin
         // TODO back to back activates must wait tRC?
-        sd_cmd = CMD_ACTIVE;
-        sd_cs = chip_addr;
-        sd_bank = bank_addr;
-        sd_addr = row_addr;
+        sdram_cmd = CMD_ACTIVE;
+        sdram_cs = chip_addr;
+        sdram_bank = bank_addr;
+        sdram_addr = row_addr;
         delay = tRCD;
         if (read_b)
           next_state = READ;
@@ -249,10 +249,10 @@ always_comb begin
 
       // Read from an opened row
       READ : begin
-        sd_cmd = CMD_READ;
-        sd_cs = chip_addr;
-        sd_bank = bank_addr;
-        sd_addr = {3'b0,col_addr};
+        sdram_cmd = CMD_READ;
+        sdram_cs = chip_addr;
+        sdram_bank = bank_addr;
+        sdram_addr = {3'b0,col_addr};
         next_state = READ_BURST;
         next_burst_count = 3'd6;
       end
@@ -289,12 +289,12 @@ always_comb begin
       end
 
       WRITE : begin
-        sd_cmd = CMD_WRITE;
-        sd_cs = chip_addr;
-        sd_bank = bank_addr;
-        sd_addr = {3'b0,col_addr};
-        sd_data_out = data_write_b;
-        sd_drive_data = 1;
+        sdram_cmd = CMD_WRITE;
+        sdram_cs = chip_addr;
+        sdram_bank = bank_addr;
+        sdram_addr = {3'b0,col_addr};
+        sdram_data_out = data_write_b;
+        sdram_drive_data = 1;
         cmd_complete = 1;
 
         // bypass idle state for back-to-back writes
@@ -322,28 +322,28 @@ always_comb begin
 
       // Precharge all rows before refresh
       REFRESH_PRECHARGE0 : begin
-        sd_cs = 0;
-        sd_cmd = CMD_PRECHG;
-        sd_addr[10] = 1'b1; // PrechargeAll
+        sdram_cs = 0;
+        sdram_cmd = CMD_PRECHG;
+        sdram_addr[10] = 1'b1; // PrechargeAll
         next_state = REFRESH_PRECHARGE1;
       end
       REFRESH_PRECHARGE1 : begin
-        sd_cs = 1;
-        sd_cmd = CMD_PRECHG;
-        sd_addr[10] = 1'b1; // PrechargeAll
+        sdram_cs = 1;
+        sdram_cmd = CMD_PRECHG;
+        sdram_addr[10] = 1'b1; // PrechargeAll
         delay = tRP-1; // -1 due to chip interleaving
         next_state = REFRESH0;
       end
 
       // CBR Refresh
       REFRESH0 : begin
-        sd_cs = 0;
-        sd_cmd = CMD_AUTOREF;
+        sdram_cs = 0;
+        sdram_cmd = CMD_AUTOREF;
         next_state = REFRESH1;
       end
       REFRESH1 : begin
-        sd_cs = 1;
-        sd_cmd = CMD_AUTOREF;
+        sdram_cs = 1;
+        sdram_cmd = CMD_AUTOREF;
         delay = tRFC;
         next_state = IDLE;
       end
@@ -355,41 +355,41 @@ always_comb begin
       end
 
       INIT_PRECHARGE0 : begin
-        sd_cs = 0;
-        sd_cmd = CMD_PRECHG;
-        sd_addr[10] = 1'b1; // PrechargeAll
+        sdram_cs = 0;
+        sdram_cmd = CMD_PRECHG;
+        sdram_addr[10] = 1'b1; // PrechargeAll
         next_state = INIT_PRECHARGE1;
       end
       INIT_PRECHARGE1 : begin
-        sd_cs = 1;
-        sd_cmd = CMD_PRECHG;
-        sd_addr[10] = 1'b1; // PrechargeAll
+        sdram_cs = 1;
+        sdram_cmd = CMD_PRECHG;
+        sdram_addr[10] = 1'b1; // PrechargeAll
         delay = tRP;
         next_state = INIT_MODE0;
       end
 
       INIT_MODE0 : begin
-        sd_cs = 0;
-        sd_cmd = CMD_MRS;
-        sd_addr = MODE;
+        sdram_cs = 0;
+        sdram_cmd = CMD_MRS;
+        sdram_addr = MODE;
         next_state = INIT_MODE1;
       end
       INIT_MODE1 : begin
-        sd_cs = 1;
-        sd_cmd = CMD_MRS;
-        sd_addr = MODE;
+        sdram_cs = 1;
+        sdram_cmd = CMD_MRS;
+        sdram_addr = MODE;
         delay = tMRD;
         next_state = INIT_AUTOREF1;
       end
 
       INIT_AUTOREF1 : begin
-        sd_cmd = CMD_AUTOREF;
+        sdram_cmd = CMD_AUTOREF;
         delay = tRFC;
         next_state = INIT_AUTOREF2;
       end
 
       INIT_AUTOREF2 : begin
-        sd_cmd = CMD_AUTOREF;
+        sdram_cmd = CMD_AUTOREF;
         delay = tRFC;
         next_state = IDLE;
       end
@@ -401,7 +401,9 @@ always_comb begin
     if (reset) begin
       cas_shift_r <= 0;
     end else begin
-      cas_shift_r[tCAS-1] <= ((state == READ) || (state == READ_BURST));
+      // BOZO TODO reenable BURSTS
+      //cas_shift_r[tCAS-1] <= ((state == READ) || (state == READ_BURST));
+      cas_shift_r[tCAS-1] <= ((state == READ));
       for (int i = 0; i < tCAS-1; i++)
         cas_shift_r[i] <= cas_shift_r[i+1];
     end
@@ -450,4 +452,4 @@ always_comb begin
       open_row_addrs[{chip_addr,bank_addr}] <= row_addr;
   end
 
-endmodule // sdram
+endmodule : sdram
