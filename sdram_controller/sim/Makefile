@@ -23,9 +23,12 @@ sdram: export COMPILE_ARGS := $(COMPILE_ARGS) -GFREQ=50000000
 sdram:
 	$(MAKE) -j10
 
+axi:
+	$(MAKE) DUT=sdram_axi_gpio -j10
+
 waves:
 	@test -f dump.fst || (echo "Error: dump.fst not found. Simulate a target first." && exit 1)
-	surfer -s state.surf.ron dump.fst
+	surfer -s sdram_axi_gpio.surf.ron dump.fst
 
 clean::
 	rm -rf __pycache__
