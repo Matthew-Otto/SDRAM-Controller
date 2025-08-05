@@ -14,6 +14,7 @@ module sdram #(parameter FREQ = 50000000) (
   // SOC interface
   input  logic        read,
   input  logic        write,
+  input  logic [1:0]  wr_strb,
   input  logic [25:0] addr,  // {chip, bank[1:0], row[12:0], col[9:0]}
   output logic        cmd_ready,
   input  logic [15:0] data_write,
@@ -110,6 +111,7 @@ module sdram #(parameter FREQ = 50000000) (
   logic        write_b;
   logic [25:0] addr_b;
   logic [15:0] data_write_b;
+  logic [1:0]  data_strb_b;
 
   logic        chip_addr, input_chip_addr;
   logic [1:0]  bank_addr, input_bank_addr;
@@ -132,6 +134,7 @@ module sdram #(parameter FREQ = 50000000) (
   logic        pending_refresh;
   
   assign cmd_ready = ((~read_b && ~write_b) || cmd_complete) && power_on_seq_complete;
+  assign {udqm, ldqm} = data_strb_b;
   assign {chip_addr, bank_addr, row_addr, col_addr} = addr_b;
   assign {input_chip_addr, input_bank_addr, input_row_addr, input_col_addr} = addr;
 
@@ -163,6 +166,7 @@ module sdram #(parameter FREQ = 50000000) (
     if (cmd_ready && (read || write)) begin
       addr_b <= addr;
       data_write_b <= data_write;
+      data_strb_b <= wr_strb;
     end
   end
 
@@ -292,7 +296,7 @@ module sdram #(parameter FREQ = 50000000) (
         sdram_cmd = CMD_WRITE;
         sdram_cs = chip_addr;
         sdram_bank = bank_addr;
-        sdram_addr = {3'b0,col_addr};
+        sdram_addr = {udqm,ldqm,1'b0,col_addr};
         sdram_data_out = data_write_b;
         sdram_drive_data = 1;
         cmd_complete = 1;

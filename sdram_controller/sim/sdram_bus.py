@@ -48,8 +48,18 @@ class SDRAM(Bus):
         addr += int(self.cs.value) << 25
         addr += int(self.bank.value) << 23
         addr += int(self.bank_row[self.bank.value]) << 10
-        addr += int(self.addr.value)
+        addr += int(self.addr.value) & 0x3ff
         return addr
+    
+    def calcualte_wrmask(self):
+        upper = (int(self.addr.value) >> 12) & 0x1
+        lower = (int(self.addr.value) >> 11) & 0x1
+        mask = 0x0
+        if not upper:
+            mask += 0xff00
+        if not lower:
+            mask += 0xff
+        return mask
 
     async def process_cmd(self):
         while True:
@@ -70,7 +80,8 @@ class SDRAM(Bus):
 
             if cmd == "CMD_WRITE":
                 addr = self.calculate_address()
-                data = int(self.data_out.value)
+                wrmask = self.calcualte_wrmask()
+                data = int(self.data_out.value) & wrmask
                 self.mem[addr] = data
                 cocotb.log.info(f"Write: {addr:#x} <= {data:#x}")
 

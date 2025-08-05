@@ -12,7 +12,6 @@ utils_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../cocot
 sys.path.insert(0, utils_dir)
 from sdram_bus import SDRAM
 
-read_q = Queue()
 ref_mem = []
 
 def addr_gen():
@@ -37,18 +36,17 @@ async def reset(dut):
 
 
 @cocotb.coroutine
-async def get_read_data(dut):
+async def get_read_data(dut, read_q):
     while True:
         await RisingEdge(dut.clk)
         if dut.data_read_val.value:
-            read_addr = read_q.get()
-            ref = ref_mem[read_addr]
+            ref = read_q.get()
             print(f"read {hex(int(dut.data_read.value))}")
             assert ref == int(dut.data_read.value), "read invalid data from SDRAM"
 
 
 
-@cocotb.test()
+#@cocotb.test()
 async def test(dut):
     seed = 12345 #int(time.time())
     random.seed(seed)
@@ -56,9 +54,10 @@ async def test(dut):
 
     # start system clock
     cocotb.start_soon(Clock(dut.clk, 20, units="ns").start())
-
     sdram = SDRAM(dut, "sdram", dut.clk)
+    read_q = Queue()
     await reset(dut)
+
 
     # write random data to virtual memory
     sdram.mem = [random.getrandbits(16) for _ in range(2**26)]
@@ -86,3 +85,95 @@ async def test(dut):
         
         dut.write.value = 0
         dut.read.value = 0
+
+
+@cocotb.test()
+async def test_byte_addr(dut):
+    cocotb.start_soon(Clock(dut.clk, 20, units="ns").start())
+    sdram = SDRAM(dut, "sdram", dut.clk)
+    await reset(dut)
+
+    read_q = Queue()
+
+    dut.write.value = 1
+    dut.wr_strb.value = 0
+    dut.addr.value = 0x0
+    dut.data_write.value = 0xffff
+    read_q.put(0xffff)
+    while not dut.cmd_ready.value:
+        await FallingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+
+    dut.wr_strb.value = 0b01
+    dut.addr.value = 0x1
+    read_q.put(0xff00)
+    await FallingEdge(dut.clk)
+    while not dut.cmd_ready.value:
+        await FallingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+
+    dut.wr_strb.value = 0b10
+    dut.addr.value = 0x2
+    read_q.put(0x00ff)
+    await FallingEdge(dut.clk)
+    while not dut.cmd_ready.value:
+        await FallingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+
+    dut.wr_strb.value = 0b11
+    dut.addr.value = 0x3
+    read_q.put(0x0000)
+    await FallingEdge(dut.clk)
+    while not dut.cmd_ready.value:
+        await FallingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+    
+    dut.wr_strb.value = 0b00
+    dut.addr.value = 0x4
+    read_q.put(0xffff)
+    await FallingEdge(dut.clk)
+    while not dut.cmd_ready.value:
+        await FallingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+    dut.write.value = 0
+
+    cocotb.start_soon(get_read_data(dut, read_q))
+    await ClockCycles(dut.clk,5)
+    print(sdram.mem[0:10])
+
+    
+    dut.read.value = 1
+    dut.addr.value = 0x0
+    await FallingEdge(dut.clk)
+    while not dut.cmd_ready.value:
+        await FallingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+
+    dut.addr.value = 0x1
+    await FallingEdge(dut.clk)
+    while not dut.cmd_ready.value:
+        await FallingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+
+    dut.addr.value = 0x2
+    await FallingEdge(dut.clk)
+    while not dut.cmd_ready.value:
+        await FallingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+
+    dut.addr.value = 0x3
+    await FallingEdge(dut.clk)
+    while not dut.cmd_ready.value:
+        await FallingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+
+    dut.addr.value = 0x4
+    await FallingEdge(dut.clk)
+    while not dut.cmd_ready.value:
+        await FallingEdge(dut.clk)
+    await RisingEdge(dut.clk)
+    dut.read.value = 0
+
+    await ClockCycles(dut.clk, 20)
+
+
